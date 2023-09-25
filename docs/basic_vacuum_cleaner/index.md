@@ -82,7 +82,7 @@ The task is simple enough to be managed by a **FSM**[^1]. They can be summarized
      - The robot detects an obstacle in the trajectory. That will trigger the **second** state, **redirect**.
      - The robot determines that there is enough clearance. That will trigger the **third** state, **exploration**.
   2. **Redirect**. The robot will face a random direction. From there, the **first** state, **move forward**, will be triggered.
-  3. **exploration**. The robot will start the exploration pattern (_A.K.A._ **spiral** pattern, as stated before). If an obstacle is detected in the trajectory of the robot, the **second** state, **redirect**, will be triggered.
+  3. **Exploration**. The robot will start the exploration pattern (_A.K.A._ **spiral** pattern, as stated before). If an obstacle is detected in the trajectory of the robot, the **second** state, **redirect**, will be triggered.
 
 That being said, a provisional **flowchart** would look like this:
 
