@@ -11,3 +11,14 @@ The objective of this practice is to implement the logic of a navigation algorit
 <p align="center">
   <img src="https://jderobot.github.io/RoboticsAcademy/assets/images/exercises/vacuum_cleaner/vacuum_cleaner.png" />
 </p>
+
+___
+
+## Standard approach
+
+___
+
+## Advanced approach
+
+___
+
