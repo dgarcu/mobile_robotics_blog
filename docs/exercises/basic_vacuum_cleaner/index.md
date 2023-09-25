@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Basic Vacuum Cleaner
-nav_exclude: true
+nav_exclude: false
 ---
 
 # Basic Vacuum Cleaner
