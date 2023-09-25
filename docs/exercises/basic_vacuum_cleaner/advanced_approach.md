@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Advanced Approach
-nav_order: 1
+nav_order: 2
 ---
 
 # Advanced Approach
