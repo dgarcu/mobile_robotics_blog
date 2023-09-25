@@ -16,8 +16,8 @@ The main features that this site provides are:
 
   - **Web based**. Uses a browser as GUI.
   - **Dependencies preinstallation**. A [Docker](https://www.docker.com/) [image](https://hub.docker.com/r/jderobot/robotics-academy) is provided with all necessary dependencies, which will serve as robotics backend.
-  - **Python language**
-  - **ROS Based**[^1]
+  - **Python language**.
+  - **ROS Based**.[^1]
   - **Simulated + real robots**. The platform is capable of program real robots.
   - **Academy**. A series of practical challenges are proposed.
   - **Games**. You can compete with other programmers as a evaluation system is implemented within the exercises.
