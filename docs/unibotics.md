@@ -7,7 +7,7 @@ nav_order: 2
 # Unibotics 🎓
 
 <p align="center">
-  <img src="docs/assets/img/unibotics_logo.png" />
+  <img src="assets/img/unibotics_logo.png" />
 </p>
 
 [Unibotics](https://unibotics.org/) is an educational web platform developed by [JdeRobot](https://jderobot.github.io/) organization. **Some teachers from our university are actually members of this organization**.
