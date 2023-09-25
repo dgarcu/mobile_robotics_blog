@@ -86,6 +86,10 @@ The task is simple enough to be managed by a **FSM**[^1]. They can be summarized
 
 That being said, a provisional **flowchart** would look like this:
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/dgarcu/mobile_robotics_blog/main/docs/basic_vacuum_cleaner/assets/img/flowchart.png" />
+</p>
+
 However, as the application is being developed, this flowchart will suffer severe changes, I am sure of it!
 
 ___
