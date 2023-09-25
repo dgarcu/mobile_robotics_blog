@@ -19,6 +19,13 @@ The objective of this practice is to implement the logic of a navigation algorit
   <img src="https://jderobot.github.io/RoboticsAcademy/assets/images/exercises/vacuum_cleaner/vacuum_cleaner.png" />
 </p>
 
+>**PRO HINT**
+>
+>The previous image suggest the usage of several things:
+>  - Wall follower algorithm.
+>  - Spiral pattern for surface coverage.
+>  - Random redirections when an obstacle is detected.
+
 ___
 
 ## Standard approach
@@ -26,6 +33,21 @@ ___
 ### Theoretical concepts
 
 These are some thoughts that have been taken into account in the problem formulation phase, as well as the design of its solution.
+
+#### Wall follower
+
+In an effort to cover the surface of a challenging part of the room like the wall's base, a **Wall-Follower Algorithm** could be implemented. In order to tackle this, a safe distance to the wall should be determined, lets call it **D**.
+
+Once the robot detects an upfront obstacle, the robot can orientate its closest flank to it. Once this is achieved, the robot should maintain a constant distance (**D**) to the wall while moving forward. From this state, two main situations may ocurr:
+
+  1. The robot detects another obstacle while following a wall (More likely a corner). The robot must avoid it trying to maintain the distance **D** to the wall constant.
+  2. The robot moves away from the setpoint distance. In turn, it can be divided into two more:
+     1. The robot is moving **towards** the wall. The robot must **turn away from the wall**.
+     2. The robot is moving **away from** the wall. The robot must **turn towards the wall**.
+    
+This whole process shall be controlled by a _controller_... [_Genius, huh_](https://www.youtube.com/watch?v=3ILscTrJrY4)? Smells like a [**PID** Controller](https://en.wikipedia.org/wiki/Proportional%E2%80%93integral%E2%80%93derivative_controller)!
+    
+Since the room is filled with furnitures, there is a chance for the robot to start to follow the shape of one of them. Despite this, technically there would be no difference, so for simplicity we will continue to refer to the algorithm as **Wall-Follower**.
 
 #### Obstacle avoidance
 
@@ -79,10 +101,15 @@ This procedure may be triggered either randomly or when the LIDAR sensor ensures
 The task is simple enough to be managed by a **FSM**[^1]. They can be summarized in three simple steps:
 
   1. **Move forward**. The robot will advance in its current orientation. Two events could take the robot out of this state:
-     - The robot detects an obstacle in the trajectory. That will trigger the **second** state, **redirect**.
+     - The robot detects an obstacle in the trajectory. That will trigger randomly one of this states:
+        - The **second** state, **redirect**.
+        - The **fourth** state, **Follow wall**.
      - The robot determines that there is enough clearance. That will trigger the **third** state, **exploration**.
   2. **Redirect**. The robot will face a random direction. From there, the **first** state, **move forward**, will be triggered.
-  3. **Exploration**. The robot will start the exploration pattern (_A.K.A._ **spiral** pattern, as stated before). If an obstacle is detected in the trajectory of the robot, the **second** state, **redirect**, will be triggered.
+  3. **Exploration**. The robot will start the exploration pattern (_A.K.A._ **spiral** pattern, as stated before). If an obstacle is detected in the trajectory of the robot, one of the following states will be triggered randomly:
+      - The **second** state, **redirect**.
+      - The **fourth** state, **Follow wall**.
+  5. **Follow wall**. The robot will follow the shape of the obstacle detected until a given event, for example, detecting another obstacle upfront. After this, the **second** state, **redirect**, will be triggered.
 
 That being said, a provisional **flowchart** would look like this:
 
