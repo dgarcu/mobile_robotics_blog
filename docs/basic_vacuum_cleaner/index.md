@@ -25,6 +25,8 @@ ___
 
 ### Theoretical concepts
 
+These are some thoughts that have been taken into account in the problem formulation phase, as well as the design of its solution.
+
 #### Obstacle avoidance
 
 The only sensor we can count on is the LIDAR. That being said, that should be enough!
@@ -55,9 +57,9 @@ At first glance, I thought about the 3D Printers, since they must cover all the 
 
 Browsing the [Prusa Knowledge Base](https://help.prusa3d.com/article/infill-patterns_177130) I ran into the [**Hilbert Curve**](https://en.wikipedia.org/wiki/Hilbert_curve), introducing me to the concept of [**Space-filling curves**](https://en.wikipedia.org/wiki/Space-filling_curve). According to the definition seen on that page:
 
-> A space-filling curve is a curve whose range reaches every point in a higher dimensional region, typically the unit square.
+>_A space-filling curve is a curve whose range reaches every point in a higher dimensional region, typically the unit square._
 
-Which sounds perfect for this application... If only we know the space to fill! But then I remembered that the environment will remain unknown for the whole task, so this approach was discarded much to my regret, since it looked promising, funny and eye-catching!
+Which sounds perfect for this application... **If only we know the space to fill in advance**! But then I remembered that the environment will remain unknown for the whole task, so this approach was discarded much to my regret, since it looked promising, funny and eye-catching!
 
 <p align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Hilbert_curve%21.gif" />
@@ -72,6 +74,20 @@ In the end, I decided to go for a **spiral** pattern for this main reasons:
 
 This procedure may be triggered either randomly or when the LIDAR sensor ensures that there is enough clearance in front of the robot to begin.
 
+#### Control flow
+
+The task is simple enough to be managed by a **FSM**[^1]. They can be summarized in three simple steps:
+
+  1. **Move forward**. The robot will advance in its current orientation. Two events could take the robot out of this state:
+     - The robot detects an obstacle in the trajectory. That will trigger the **second** state, **redirect**.
+     - The robot determines that there is enough clearance. That will trigger the **third** state, **exploration**.
+  2. **Redirect**. The robot will face a random direction. From there, the **first** state, **move forward**, will be triggered.
+  3. **exploration**. The robot will start the exploration pattern (_A.K.A._ **spiral** pattern, as stated before). If an obstacle is detected in the trajectory of the robot, the **second** state, **redirect**, will be triggered.
+
+That being said, a provisional **flowchart** would look like this:
+
+However, as the application is being developed, this flowchart will suffer severe changes, I am sure of it!
+
 ___
 
 ## Advanced approach
@@ -80,3 +96,4 @@ ___
 
 ___
 
+[^1]: [Finite-State Machine.](https://en.wikipedia.org/wiki/Finite-state_machine)
