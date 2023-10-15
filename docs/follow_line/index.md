@@ -164,7 +164,7 @@ Since the speed was involved, I thought that maybe I can dynamically change the 
 The result of this is approach, for example, an acceptable input with a line position that is actually crossing the center of the image at a certain angle. This seemed to be helpful at higher speed turns, where is pretty easy to overshoot the line position. You will see this more clearly in the video at the end of the exercise.
 
 <p align="center">
-  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/main/docs/follow_line/assets/img/gauges.gif" />
+  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/main/docs/follow_line/assets/img/gauges.gif?raw=true" />
 </p>
 
 ##### Error threshold
