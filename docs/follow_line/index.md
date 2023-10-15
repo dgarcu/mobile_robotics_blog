@@ -209,6 +209,8 @@ Whereas the record of mine overengineered algorithm is 2:19.000. Not even close.
 
 No more chit-chat, here is the video of the car completing the simple circuit (You might want to check [this link](https://open.spotify.com/track/5X7zViJE5FvOZ8vhcVk1NV?si=312c922d5f8a4a5b) just before clicking the play button):
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/vawUmwpezh8?si=Zml-2CRwnc9VITIk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 [full_lap.webm](https://github.com/dgarcu/mobile_robotics_blog/assets/92941081/331e7a2c-b786-4a3d-8dbd-c9e82e9ea2d4)
 
 ### Final thoughts
