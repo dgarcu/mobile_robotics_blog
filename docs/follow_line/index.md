@@ -121,7 +121,7 @@ Furthermore, this wrapps the fact that the color of the line is not relevant for
 In the image below, you can see the whole process. The first image is the original image, the second image is the image after applying the color filter, the third image is the image after applying the gaussian filter and the last image is the image after applying the binary filter.
 
 <p align="center">
-  <img src="https://jderobot.github.io/RoboticsAcademy/exercises/FollowLine/images/1.png" />
+  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/main/docs/follow_line/assets/img/segmentation_process.gif?raw=true" />
 </p>
 
 #### Contour filter
@@ -133,7 +133,7 @@ This actually is not a filter either, but a method for obtaining the line positi
 In an effort to improve the performance of the algorithm, the image is going to be divided into slices. This is going to be done by applying a mask to the image. This mask is going to be a series of horizontal lines, which are going to be used to divide the image into slices. Below you can see an example of this.[^2]
 
 <p align="center">
-  <img src="https://jderobot.github.io/RoboticsAcademy/exercises/FollowLine/images/2.png" />
+  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/main/docs/follow_line/assets/img/slices.gif?raw=true" />
 </p>
 
 >**Fun fact _deja vu_**
@@ -142,7 +142,7 @@ In an effort to improve the performance of the algorithm, the image is going to 
 What I am trying to do here is to find the moment of each line slice. This is useful because now I have a series of points which represents the line. With the information of these points, I would be able to compute not only the line position, but also the shape of it. This is going to be interesting for detecting turns!
 
 <p align="center">
-  <img src="https://jderobot.github.io/RoboticsAcademy/exercises/FollowLine/images/2.png" />
+  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/main/docs/follow_line/assets/img/moments.gif?raw=true" />
 </p>
 
 ##### Weighted average
@@ -164,7 +164,7 @@ Since the speed was involved, I thought that maybe I can dynamically change the 
 The result of this is approach, for example, an acceptable input with a line position that is actually crossing the center of the image at a certain angle. This seemed to be helpful at higher speed turns, where is pretty easy to overshoot the line position. You will see this more clearly in the video at the end of the exercise.
 
 <p align="center">
-  <img src="https://jderobot.github.io/RoboticsAcademy/exercises/FollowLine/images/2.png" />
+  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/main/docs/follow_line/assets/img/gauges.gif" />
 </p>
 
 ##### Error threshold
@@ -209,7 +209,13 @@ Whereas the record of mine overengineered algorithm is 2:19.000. Not even close.
 
 No more chit-chat, here is the video of the car completing the simple circuit (You might want to check [this link](https://open.spotify.com/track/5X7zViJE5FvOZ8vhcVk1NV?si=312c922d5f8a4a5b) just before clicking the play button):
 
+[full_lap.webm](https://github.com/dgarcu/mobile_robotics_blog/assets/92941081/331e7a2c-b786-4a3d-8dbd-c9e82e9ea2d4)
 
+### Final thoughts
+
+I really think that the time per lap could be improved by further tweaking of the parameters. But above all, I think that the overall solution can be improved by adding a simple concept:
+
+**The shape of the line was not explored thoroughly**. What I mean is that the parameters of the steering PID are currently tied only to the linear speed of the car, but maybe, **if they are also correlated to the shape of the line**, this parameters could be more fine adjusted. Next life I guess.
 
 [^1]: In the _simple circuit_, that usually means a lap time below 90 seconds.
 [^2]: The green lines are the ones that are going to be used to divide the image into slices. They are only used for visualization purposes, and they are not part of the algorithm.
