@@ -100,4 +100,116 @@ This are basically the main steps to obtain the line position. However, there ar
 
 ### Implementation
 
+#### ROI
+
+The first step is to reduce the input image size. This is going to be done by cropping the image to the region of interest. All the information is going to be located in a certain part of the whole image.
+
+With this, we are reducing the amount of information that the algorithm has to process, which is going to improve the performance of the algorithm. This is going to be done by applying a mask to the image.
+
+>**Fun fact**
+>This was actually implemented **after** the development of the rest of the algorithm. I was not sure if it was going to be necessary, but it turned out to be a good idea.
+>That is why the images you are going to see in the following sections are not cropped. However, the final version of the algorithm is working with cropped images. The images are not cropped in the following sections because I did not want to re-record them, since the principle is the same! 😅
+
+#### Color, gaussian and binary filters
+
+This filters are going to be applied in order to isolate the line from the rest of the image. This is going to be done by filtering the image by color, smoothing the image and thresholding the image. The final result is going to be a binary image, where the line is going to be represented by white pixels and the rest of the image is going to be represented by black pixels.
+
+This is a common approach for image processing, since the algorithms tend to work better with binary images. Also, there is a lot of information that is not relevant for the algorithm, so it is better to get rid of it.
+
+Furthermore, this wrapps the fact that the color of the line is not relevant for the algorithm, which is a good thing. This means that the algorithm is going to be able to work with any color, as long as it is different from the rest of the image and you change the color filter accordingly.
+
+In the image below, you can see the whole process. The first image is the original image, the second image is the image after applying the color filter, the third image is the image after applying the gaussian filter and the last image is the image after applying the binary filter.
+
+<p align="center">
+  <img src="https://jderobot.github.io/RoboticsAcademy/exercises/FollowLine/images/1.png" />
+</p>
+
+#### Contour filter
+
+This actually is not a filter either, but a method for obtaining the line position. This is going to be done by finding the contours of the image. This is going to be done by applying the [findContours](https://docs.opencv.org/3.4/d4/d73/tutorial_py_contours_begin.html) method from OpenCV. However, this is going to be applied with some special considerations.
+
+##### Image slices
+
+In an effort to improve the performance of the algorithm, the image is going to be divided into slices. This is going to be done by applying a mask to the image. This mask is going to be a series of horizontal lines, which are going to be used to divide the image into slices. Below you can see an example of this.[^2]
+
+<p align="center">
+  <img src="https://jderobot.github.io/RoboticsAcademy/exercises/FollowLine/images/2.png" />
+</p>
+
+>**Fun fact _deja vu_**
+>This was the moment when I realized that the ROI needed to be implemented. As you can see, the line never goes beyond the half of the image. So why bother processing the whole image? 😅
+
+What I am trying to do here is to find the moment of each line slice. This is useful because now I have a series of points which represents the line. With the information of these points, I would be able to compute not only the line position, but also the shape of it. This is going to be interesting for detecting turns!
+
+<p align="center">
+  <img src="https://jderobot.github.io/RoboticsAcademy/exercises/FollowLine/images/2.png" />
+</p>
+
+##### Weighted average
+
+Each of the moment you saw in the previous section is going to be used to compute the line position. This is going to be done by computing the weighted average of all the moments.
+
+This means that the further points in the line are going to have more weight than the closer ones, trying to not overshoot the line position. The weight is distributed using a [sigmoid function](https://en.wikipedia.org/wiki/Sigmoid_function). Actually, this mathematical function is used a couple of times more in the development of the algorithm.
+
+Said so, the final error will be the difference between the line position and the center of the image multiplied by the weight of the moment. In an image shown in later sections, you can see how this info is represented:
+
+Moments are represented as a yellowed dot above the line. An arrowed line is drawed between the center axis of the img, to each one of the moments detected. The saturation of the color of the line is proportional to the weight of the moment. The more saturated the color is, the more weight the moment has.
+
+Initially, the closer ones had more weight, thinking that it is more important to align the car with the near future. (You can actually see this in the following images) But as I have proven by smash-the-car-against-the-wall testing, this is not a good idea, since the car tends to ignore that time is inexorable, like most of us usually do, and sooner or later a wild turn will appear and despite of the car noticing it, not fixing its heading quickly enough.
+
+In a stunning display of intelligence, I decided to invert the weight of the moments, so the further ones have more weight. This turned out to be a good idea, since at high speeds, the car tends to try to follow the end of the line, most of the time being more accurate with the future.
+
+Since the speed was involved, I thought that maybe I can dynamically change the weights of the moments depending on the speed of the car. No advantage was found, so I decided to follow the KISS principle. (Keep It Simple, _Stupid!_)
+
+The result of this is approach, for example, an acceptable input with a line position that is actually crossing the center of the image at a certain angle. This seemed to be helpful at higher speed turns, where is pretty easy to overshoot the line position. You will see this more clearly in the video at the end of the exercise.
+
+<p align="center">
+  <img src="https://jderobot.github.io/RoboticsAcademy/exercises/FollowLine/images/2.png" />
+</p>
+
+##### Error threshold
+
+The error is represented by a dot moving along the X axis of the img. Also, a vertical dashed line is drawed at the center of the img. This is the error threshold. The error is going to be computed as the difference between the line position and the center of the image. If the error is below the threshold, the car is in the safe zone. If the error is above the threshold, the car is in the warning zone. If the error is above the threshold, the car is in the danger zone.
+
+This zones will be represented by colors. The safe zone will be represented by green, the warning zone will be represented by yellow and the danger zone will be represented by red. You will be able to see this in the video at the end of the exercise and in the images shown in the following sections.
+
+#### LVC (Linear Vel Controller)
+
+The linear vel controller is going to be used to govern the throttle. This is going to be done by computing the linear speed of the car based on the line position. This is going to be done by applying a series of thresholds to the line position.
+
+When the car is in the safe zone, a watchdog is set. Once a certain amount of time has passed, the car will accelerate at an increasing rate, so the car will not only accelerate, but the acceleration itself will be increased the longer the car stays in this zone. This is represented as _Time on track_ label at the bottom left of the image you will see in the video.
+
+When the car is in the warning zone, the acceleration rate is kept constant. This is going to be done in order to avoid sudden changes in the linear speed, so the steering PID has more time to react, trying to avoid braking to the minimum linear speed.
+
+When the car is in the danger zone, the acceleration rate is reset. Along with this, the car will slow down, and the decceleration itself will be correlated to the current speed of the car. Again, a sigmoid function is used to distribute the decceleration rate. The higher the speed, the higher the decceleration rate.
+
+This mimics the natural behaviour of a human driver, allowing the PID to recover the line safe zone from a slower speed, which is easier to achieve. Once this is done, the car can accelerate again. You will be able to see this in the gauges of the car in the video at the end of the exercise. (A gauge for the angular speed and another one for the linear speed)
+
+#### Dynamic PID
+
+Having a dynamic linear speed also introduces a problem with the steering PID. The steering PID is tuned for a certain linear speed, so it is not going to work properly if the linear speed changes. This is going to be done by applying a series of thresholds to the linear speed.
+
+For the whole range of speed of the car, a manual tuning of the PID is going to be applied. However, for intermediate speeds, a linear interpolation between the two closest speeds is going to be applied. This is going to be done in order to avoid sudden changes in the steering angle, so the car will be able to follow the line more smoothly.
+
+This values are going to be displayed in the final image from the video. The idea behind this was trying to reach a smoother behaviour with higher speeds.
+
+### Results
+
+All this effort was worth it. The car is able to complete the simple circuit in less than 90 seconds. (The video at the end of the exercise is a proof of this) Not only this, but is able to complete all the circuits in an apparently safe way and reasonably speed.
+
+...
+
+Actually not, because according to [this F1 fandom page](https://f1.fandom.com/wiki/Circuit_de_Barcelona-Catalunya), the record for Montmeló circuit is currently 1:16.330 by **Max Verstappen**.
+
+<p align="center">
+  <img src="https://e00-mx-marca.uecdn.es/mx/assets/multimedia/imagenes/2023/05/26/16851271280364.jpg" />
+</p>
+
+Whereas the record of mine overengineered algorithm is 2:19.000. Not even close. Despite of this, I am still proud of the results, since I am pretty sure that I would end in the wall if I tried to drive a real F1 car that fast, not even thinking of achieving 2:19.000.
+
+No more chit-chat, here is the video of the car completing the simple circuit (You might want to check [this link](https://open.spotify.com/track/5X7zViJE5FvOZ8vhcVk1NV?si=312c922d5f8a4a5b) just before clicking the play button):
+
+
+
 [^1]: In the _simple circuit_, that usually means a lap time below 90 seconds.
+[^2]: The green lines are the ones that are going to be used to divide the image into slices. They are only used for visualization purposes, and they are not part of the algorithm.
