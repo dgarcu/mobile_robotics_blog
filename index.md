@@ -7,7 +7,7 @@ nav_exclude: true
 # 🤖 Mobile Robotics Blog
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/dgarcu/mobile_robotics_blog/main/docs/assets/img/logo.png" />
+  <img src="https://raw.githubusercontent.com/dgarcu/mobile_robotics_blog/master/assets/img/logo.png" />
 </p>
 
 ___

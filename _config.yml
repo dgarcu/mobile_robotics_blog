@@ -7,8 +7,8 @@ site_author: Diego García Currás
 repo_url: "https://github.com/dgarcu/mobile_robotics_blog"
 edit_on_github: true
 github_docs_folder: true
-logo: 'https://raw.githubusercontent.com/dgarcu/mobile_robotics_blog/main/docs/assets/img/logo.png'
-site_favicon: 'https://raw.githubusercontent.com/dgarcu/mobile_robotics_blog/main/docs/assets/img/favicon.ico'
+logo: 'https://raw.githubusercontent.com/dgarcu/mobile_robotics_blog/master/assets/img/logo.png'
+site_favicon: 'https://raw.githubusercontent.com/dgarcu/mobile_robotics_blog/master/assets/img/favicon.ico'
 sticky_navigation: true
 prev_next_buttons_location: bottom
 search_enabled: true

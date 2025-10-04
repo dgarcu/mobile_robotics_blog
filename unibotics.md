@@ -7,7 +7,7 @@ nav_order: 2
 # Unibotics 🎓
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/dgarcu/mobile_robotics_blog/main/docs/assets/img/unibotics_logo.png" />
+  <img src="https://raw.githubusercontent.com/dgarcu/mobile_robotics_blog/master/assets/img/unibotics_logo.png" />
 </p>
 
 [Unibotics](https://unibotics.org/) is an educational web platform developed by [JdeRobot](https://jderobot.github.io/) organization. **Some teachers from our university are actually members of this organization**.
@@ -15,7 +15,7 @@ nav_order: 2
 The main features that this site provides are:
 
 - **Web based**. Uses a browser as GUI.
-- **Dependencies preinstallation**. A [Docker](https://www.docker.com/) [image](https://hub.docker.com/r/jderobot/robotics-academy) is provided with all necessary dependencies, which will serve as robotics backend.
+- **Dependencies preinstallation**. A [Docker](https://www.docker.com/) [image](https://hub.docker.com/r/jderobot/robotics-backend) is provided with all necessary dependencies, which will serve as robotics backend.
 - **Python language**.
 - **ROS2 Based**.
 **Simulated + real robots**. The platform is capable of program real robots.
