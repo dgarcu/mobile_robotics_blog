@@ -127,4 +127,8 @@ ___
 
 ___
 
+## Final video
+
+[![YouTube Short](https://img.youtube.com/vi/v7llcHraeJE/hqdefault.jpg)](https://youtube.com/shorts/v7llcHraeJE)
+
 [^1]: [Finite-State Machine.](https://en.wikipedia.org/wiki/Finite-state_machine)
