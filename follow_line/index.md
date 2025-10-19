@@ -6,10 +6,10 @@ nav_exclude: false
 
 # Follow Line
 
-The goal of this exercise is to perform a PID reactive control capable of following the line painted on the racing circuit.
+The goal of this exercise is to perform a **PID reactive control** capable of following the line painted on the racing circuit.
 
 ⚠️ **Handicap**:
-  - To carry out this exercise, only the use of CAMERA is permitted. No other sensor is allowed in terms of navigation. 🚫
+  - To carry out this exercise, only the use of **CAMERA** is permitted. No other sensor is allowed in terms of navigation. 🚫
   - The car should complete the circuit as fast as possible.[^1] ⏱️
 
     That basically means three things:
@@ -23,7 +23,7 @@ The goal of this exercise is to perform a PID reactive control capable of follow
 
 >**PRO HINT**
 >
->The previous image implies the existence of a red line in the circuit. Which is great, since it is a very bright and saturared color, making its detection easier.
+>The previous image implies the existence of a **red line** in the circuit. Which is great, since it is a very bright and saturared color, making its detection easier.
 
 ___
 
@@ -35,7 +35,7 @@ These are some thoughts that have been taken into account in the problem formula
 
 #### PID control
 
-The second step is to control the car. This is going to be done by applying a PID control to the line position. This is going to be done by computing the error between the line position and the center of the image. This error is going to be used to compute the control signal mainly for the steering angle. (We will be convering the issue with the throttle in the next section, since a PID won't apply here).
+The second step is to control the car. This is going to be done by applying a **PID control** to the line position. This is going to be done by computing the **error** between the line position and the center of the image. This error is going to be used to compute the control signal mainly for the steering angle. (We will be convering the issue with the throttle in the next section, since a PID won't apply here).
 
 [PID's](https://en.wikipedia.org/wiki/Proportional%E2%80%93integral%E2%80%93derivative_controller) are widely cover in the literature, so we are not going to cover them in this exercise. In fact, it was widely covered in the previous years of the degree I am currently studying... Probably you have already studied them too, so I am not discovering anything new here.
 
@@ -53,7 +53,7 @@ Neither I am covering the very implementation of the PID because as life have ta
 
 All that being said, I kinda feel like this was an important part of the exercise, so leaving it to just a <kbd>Ctrl</kbd> +<kbd>C</kbd>//<kbd>Ctrl</kbd> + <kbd>V</kbd> feels like cheating. However, I find the other main part very much more interesting, for two main reasons:
 
-1. It is the first time on the whole degree that we are dealing with raw image processing. 🤯
+1. It is the first time on the whole degree that we are dealing with **raw image processing**. 🤯
 2. I have played with image processing before as part of my final degree project from the previous degree I studied. Casually, it was also related to autonomous driving. 🤔 Also involving Python and OpenCV. 🤔🤔
 
 That is why **I decided to put all of my effort on push the development of the image processing part of the exercise beyond the limits!** I am going to cover it in the following sections. Hope that this is enough to compensate the lack of effort on the PID part.
@@ -70,7 +70,7 @@ The easy solution would be to set a constant linear speed and try to tune a stee
 
 But like I said, I would like to compensate the lack of effort on the PID part, so I decided to go for a more complex solution.
 
-The throttle will be dynamically governed by a specific designed controller. This controller will be based on the line position. In a nutshell, Three zones will be defined:
+The throttle will be dynamically governed by a specific designed controller. This controller will be based on the line position. In a nutshell, **Three zones** will be defined:
 
 1. **Safe zone**: The car is in the middle of the line, so it can go as fast as possible.
 2. **Warning zone**: The car is close to the edge of the line, so it should slow down. (Or, at least not going any faster)
@@ -121,7 +121,7 @@ Furthermore, this wrapps the fact that the color of the line is not relevant for
 In the image below, you can see the whole process. The first image is the original image, the second image is the image after applying the color filter, the third image is the image after applying the gaussian filter and the last image is the image after applying the binary filter.
 
 <p align="center">
-  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/main/docs/follow_line/assets/img/segmentation_process.gif?raw=true" />
+  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/master/follow_line/assets/img/segmentation_process.gif?raw=true" />
 </p>
 
 #### Contour filter
@@ -133,21 +133,21 @@ This actually is not a filter either, but a method for obtaining the line positi
 In an effort to improve the performance of the algorithm, the image is going to be divided into slices. This is going to be done by applying a mask to the image. This mask is going to be a series of horizontal lines, which are going to be used to divide the image into slices. Below you can see an example of this.[^2]
 
 <p align="center">
-  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/main/docs/follow_line/assets/img/slices.gif?raw=true" />
+  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/master/follow_line/assets/img/slices.gif?raw=true" />
 </p>
 
 >**Fun fact _deja vu_**
 >This was the moment when I realized that the ROI needed to be implemented. As you can see, the line never goes beyond the half of the image. So why bother processing the whole image? 😅
 
-What I am trying to do here is to find the moment of each line slice. This is useful because now I have a series of points which represents the line. With the information of these points, I would be able to compute not only the line position, but also the shape of it. This is going to be interesting for detecting turns!
+What I am trying to do here is to find the **moment** of each line slice. This is useful because now I have a series of points which represents the line. With the information of these points, I would be able to compute not only the line position, but also the shape of it. This is going to be interesting for detecting turns!
 
 <p align="center">
-  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/main/docs/follow_line/assets/img/moments.gif?raw=true" />
+  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/master/follow_line/assets/img/moments.gif?raw=true" />
 </p>
 
 ##### Weighted average
 
-Each of the moment you saw in the previous section is going to be used to compute the line position. This is going to be done by computing the weighted average of all the moments.
+Each of the moment you saw in the previous section is going to be used to compute the line position. This is going to be done by computing the **weighted average** of all the moments.
 
 This means that the further points in the line are going to have more weight than the closer ones, trying to not overshoot the line position. The weight is distributed using a [sigmoid function](https://en.wikipedia.org/wiki/Sigmoid_function). Actually, this mathematical function is used a couple of times more in the development of the algorithm.
 
@@ -157,14 +157,14 @@ Moments are represented as a yellowed dot above the line. An arrowed line is dra
 
 Initially, the closer ones had more weight, thinking that it is more important to align the car with the near future. (You can actually see this in the following images) But as I have proven by smash-the-car-against-the-wall testing, this is not a good idea, since the car tends to ignore that time is inexorable, like most of us usually do, and sooner or later a wild turn will appear and despite of the car noticing it, not fixing its heading quickly enough.
 
-In a stunning display of intelligence, I decided to invert the weight of the moments, so the further ones have more weight. This turned out to be a good idea, since at high speeds, the car tends to try to follow the end of the line, most of the time being more accurate with the future.
+In a stunning display of intelligence, I decided to **invert the weight of the moments**, so the further ones have more weight. This turned out to be a good idea, since at high speeds, the car tends to try to follow the end of the line, most of the time being more accurate with the future.
 
-Since the speed was involved, I thought that maybe I can dynamically change the weights of the moments depending on the speed of the car. No advantage was found, so I decided to follow the KISS principle. (Keep It Simple, _Stupid!_)
+Since the speed was involved, I thought that maybe I can dynamically change the weights of the moments depending on the speed of the car. No advantage was found, so I decided to follow the **KISS principle**. (Keep It Simple, _Stupid!_)
 
 The result of this is approach, for example, an acceptable input with a line position that is actually crossing the center of the image at a certain angle. This seemed to be helpful at higher speed turns, where is pretty easy to overshoot the line position. You will see this more clearly in the video at the end of the exercise.
 
 <p align="center">
-  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/main/docs/follow_line/assets/img/gauges.gif?raw=true" />
+  <img src="https://github.com/dgarcu/mobile_robotics_blog/blob/master/follow_line/assets/img/gauges.gif?raw=true" />
 </p>
 
 ##### Error threshold
@@ -181,7 +181,7 @@ When the car is in the safe zone, a watchdog is set. Once a certain amount of ti
 
 When the car is in the warning zone, the acceleration rate is kept constant. This is going to be done in order to avoid sudden changes in the linear speed, so the steering PID has more time to react, trying to avoid braking to the minimum linear speed.
 
-When the car is in the danger zone, the acceleration rate is reset. Along with this, the car will slow down, and the decceleration itself will be correlated to the current speed of the car. Again, a sigmoid function is used to distribute the decceleration rate. The higher the speed, the higher the decceleration rate.
+When the car is in the danger zone, the acceleration rate is reset. Along with this, the car will slow down, and the decceleration itself will be correlated to the current speed of the car. Again, a **sigmoid function** is used to distribute the decceleration rate. The higher the speed, the higher the decceleration rate.
 
 This mimics the natural behaviour of a human driver, allowing the PID to recover the line safe zone from a slower speed, which is easier to achieve. Once this is done, the car can accelerate again. You will be able to see this in the gauges of the car in the video at the end of the exercise. (A gauge for the angular speed and another one for the linear speed)
 
@@ -189,7 +189,7 @@ This mimics the natural behaviour of a human driver, allowing the PID to recover
 
 Having a dynamic linear speed also introduces a problem with the steering PID. The steering PID is tuned for a certain linear speed, so it is not going to work properly if the linear speed changes. This is going to be done by applying a series of thresholds to the linear speed.
 
-For the whole range of speed of the car, a manual tuning of the PID is going to be applied. However, for intermediate speeds, a linear interpolation between the two closest speeds is going to be applied. This is going to be done in order to avoid sudden changes in the steering angle, so the car will be able to follow the line more smoothly.
+For the whole range of speed of the car, a manual tuning of the PID is going to be applied. However, for intermediate speeds, a **linear interpolation** between the two closest speeds is going to be applied. This is going to be done in order to avoid sudden changes in the steering angle, so the car will be able to follow the line more smoothly.
 
 This values are going to be displayed in the final image from the video. The idea behind this was trying to reach a smoother behaviour with higher speeds.
 
@@ -199,13 +199,13 @@ All this effort was worth it. The car is able to complete the simple circuit in 
 
 ...
 
-Actually not, because according to [this F1 fandom page](https://f1.fandom.com/wiki/Circuit_de_Barcelona-Catalunya), the record for Montmeló circuit is currently 1:16.330 by **Max Verstappen**.
+Actually not, because according to [this F1 fandom page](https://f1.fandom.com/wiki/Circuit_de_Barcelona-Catalunya), the record for Montmeló circuit is currently **1:16.330** by **Max Verstappen**.
 
 <p align="center">
   <img src="https://e00-mx-marca.uecdn.es/mx/assets/multimedia/imagenes/2023/05/26/16851271280364.jpg" />
 </p>
 
-Whereas the record of mine overengineered algorithm is 2:19.000. Not even close. Despite of this, I am still proud of the results, since I am pretty sure that I would end in the wall if I tried to drive a real F1 car that fast, not even thinking of achieving 2:19.000.
+Whereas the record of mine overengineered algorithm is **2:19.000**. Not even close. Despite of this, I am still proud of the results, since I am pretty sure that I would end in the wall if I tried to drive a real F1 car that fast, not even thinking of achieving 2:19.000.
 
 No more chit-chat, here is the video of the car completing the simple circuit (You might want to check [this link](https://open.spotify.com/track/5X7zViJE5FvOZ8vhcVk1NV?si=312c922d5f8a4a5b) just before clicking the play button):
 
