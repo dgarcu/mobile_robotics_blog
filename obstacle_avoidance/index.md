@@ -101,8 +101,8 @@ Los siguientes parámetros controlan el comportamiento cinemático y de navegaci
 
 | Parámetro | Descripción | Valor Predeterminado |
 | :--- | :--- | :--- |
-| `ABS_MAX_LINEAR_VEL` | Velocidad lineal máxima absoluta del robot. | 4.0 |
-| `ABS_MAX_ANGULAR_VEL` | Velocidad angular máxima absoluta del robot. | 1.25 |
+| `ABS_MAX_LINEAR_VEL` | Velocidad lineal máxima absoluta del robot. | 2.0 |
+| `ABS_MAX_ANGULAR_VEL` | Velocidad angular máxima absoluta del robot. | 1.5 |
 | `TARGET_RADIUS` | Radio alrededor del objetivo que se considera "alcanzado". | 1.5 |
 
 ___
